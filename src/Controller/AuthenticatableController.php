@@ -24,9 +24,6 @@ class AuthenticatableController extends AbstractFOSRestController
             'csrf_protection' => false,
         ]);
 
-        // dd($request->getLocale());
-        // dd(date_default_timezone_get());
-
         $form->handleRequest($request);
 
         if(! $form->isSubmitted() || ! $form->isValid()) {
