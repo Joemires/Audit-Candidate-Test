@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 
@@ -69,6 +70,11 @@ class AuthenticatableController extends AbstractFOSRestController
     #[Route('/api/auth/user', methods: ['GET'])]
     public function user(#[CurrentUser] ?User $user, JWTTokenManagerInterface $JWTManager): Response
     {
-        return $this->handleView($this->view($this->getUser(), Response::HTTP_OK));
+        return $this->json(
+            ['status' => 200, 'message' => 'User retrieved successfully', 'data' => $this->getUser()],
+            Response::HTTP_OK,
+            [],
+            [ObjectNormalizer::CIRCULAR_REFERENCE_HANDLER => fn ($object) => $object->getId()]
+        );
     }
 }
